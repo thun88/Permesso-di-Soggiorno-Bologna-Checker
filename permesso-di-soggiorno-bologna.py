@@ -1,5 +1,8 @@
 from selenium import webdriver
+from selenium.webdriver import chrome
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 from datetime import datetime
 
@@ -9,11 +12,12 @@ dng = "01"
 dnm = "01"
 dna = "2000"
 
-# Imposta il percorso del driver del browser (chromedriver, geckodriver, ecc.)
-driver = webdriver.Chrome(executable_path="/percorso/al/tuo/chromedriver")
+# Initialize Chrome WebDriver without specifying executable_path
+options = webdriver.ChromeOptions()
+options.add_experimental_option("detach", True)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
 log_file = "log.txt"
-
 
 driver.get(url)
 
