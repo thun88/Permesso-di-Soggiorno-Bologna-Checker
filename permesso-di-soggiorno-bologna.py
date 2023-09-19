@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 from datetime import datetime
+from selenium.common.exceptions import NoSuchElementException
 
 url = "https://www.questura.bologna.it/node/2"
 codpratica = "23BO012345"
@@ -35,8 +36,18 @@ prenota_button.click()
 
 time.sleep(5)  # Attendi qualche secondo per caricare la pagina successiva
 
-result_message = driver.find_element("css selector", ".field-item.even")
-result_text = result_message.text.strip()
+try:
+    result_message = driver.find_element("css selector", ".field-item.even")
+    result_text = result_message.text.strip()
+except NoSuchElementException:
+    print("Element .field-item.even not found on the page. Check the page structure or selector.")
+
+try:
+    result_message = driver.find_element("css selector", ".view-header")
+    result_text = result_message.text.strip()
+except NoSuchElementException:
+    print("Element .view-header not found on the page. Check the page structure or selector.")
+  
 
 now = datetime.now()
 log_entry = f"{now} - {result_text}\n"
@@ -45,8 +56,13 @@ with open(log_file, "a") as log:
     log.write(log_entry)
 
 if "Non è pronto alcun permesso di soggiorno" not in result_text:
-    print("Risultato diverso:", result_text)
-    # Aggiungi qui il codice per avvisarti (ad esempio invio di una notifica)
+
+    if "In base ai dati da te inseriti, il tuo permesso di soggiorno è pronto per il ritiro." in result_text:
+        print("------- IL PERMESSO DI SOGGIORNO E' PRONTO !!!-----------")
+        # Aggiungi qui il codice per avvisarti (ad esempio invio di una notifica)
+    else:
+        print("Risultato diverso:", result_text)
+
 else:
     print("Non è pronto alcun permesso di soggiorno")
 
