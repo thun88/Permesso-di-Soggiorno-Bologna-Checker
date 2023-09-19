@@ -59,9 +59,15 @@ if "Non è pronto alcun permesso di soggiorno" not in result_text:
 
     if "In base ai dati da te inseriti, il tuo permesso di soggiorno è pronto per il ritiro." in result_text:
         print("------- IL PERMESSO DI SOGGIORNO E' PRONTO !!!-----------")
+        log_entry = f"{now} -------- IL PERMESSO DI SOGGIORNO E' PRONTO !!!-----------\n"
+        with open(log_file, "a") as log:
+            log.write(log_entry)
         # Aggiungi qui il codice per avvisarti (ad esempio invio di una notifica)
     else:
         print("Risultato diverso:", result_text)
+        log_entry = f"{now} -------- Risultato diverso: {result_text}\n"
+        with open(log_file, "a") as log:
+            log.write(log_entry)
 
 else:
     print("Non è pronto alcun permesso di soggiorno")
